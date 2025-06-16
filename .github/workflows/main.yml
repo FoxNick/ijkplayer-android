@@ -7,15 +7,15 @@ env:
   
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - name: Checkout the code
+        uses: actions/checkout@v4
+        
       - name: Download r27c NDK
         run: |
-          wget https://dl.google.com/android/repository/android-ndk-r27c-darwin-x86_64.zip
-          unzip android-ndk-r27c-darwin-x86_64.zip
+          wget https://dl.google.com/android/repository/android-ndk-r27c-linux.zip
+          unzip android-ndk-r27c-linux.zip
 
       - name: Build ffmpeg
         run: |
