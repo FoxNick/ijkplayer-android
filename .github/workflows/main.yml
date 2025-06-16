@@ -2,29 +2,37 @@ name: IOT IJK ANDROID RELEASE CI
 
 on:
   workflow_dispatch:
-env:
-  ROOT: /home/runner/work/ijkplayer-android
-  
+
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-14
     steps:
-      - name: Checkout the code
-        uses: actions/checkout@v4
-        
-      - name: Download r27c NDK
-        run: |
-          wget https://dl.google.com/android/repository/android-ndk-r27c-linux.zip
-          unzip android-ndk-r27c-linux.zip
-          rm android-ndk-r27c-linux.zip
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Build ffmpeg
+      - name: Download r27 NDK
         run: |
-          ANDROID_NDK=${{ env.ROOT }}/ijkplayer-android/android-ndk-r27c
-          ANDROID_NDK_ROOT=${{ env.ROOT }}/ijkplayer-android/android-ndk-r27c
-          HOST_PLATFORM="linux-x86_64"
-          ANDROID_ABI=21
-
+          wget https://dl.google.com/android/repository/android-ndk-r27-darwin-x86_64.zip
+          unzip android-ndk-r27-darwin-x86_64.zip
+      - name: Update SDK Version
+        run: |
+          rtt=$(git describe --tags `git rev-list --tags --max-count=1`)
+          rt=${rtt#*v}
+          rc=$(git rev-parse --short HEAD)
+          cd android/ijkplayer
+          sed -i "" 's#def version.*#def version = \"'$rt'\"#g' config.gradle
+      - uses: actions/setup-java@v4
+        with:
+            distribution: 'temurin' # See 'Supported distributions' for available options
+            java-version: '11'
+      - name: Build with Gradle
+        run: |
+          ls -l /Users/runner/work/ijkplayer-android/ijkplayer-android/android-ndk-r27
+          perl -i -pe "s#.*HOST_ARCH=x86_64.*#\t\tx86_64|amd64|arm64) HOST_ARCH=x86_64;;#g" /Users/runner/work/ijkplayer-android/ijkplayer-android/android-ndk-r27/ndk-build
+          export ANDROID_NDK=/Users/runner/work/ijkplayer-android/ijkplayer-android/android-ndk-r27
+          export ANDROID_NDK_ROOT=/Users/runner/work/ijkplayer-android/ijkplayer-android/android-ndk-r27
+          
           ./init-android-openssl.sh
           ./init-android.sh
 
@@ -42,9 +50,13 @@ jobs:
           cd ..
           ./compile-ijk.sh armv7a
           
+          cd android/ijkplayer
+          ./gradlew :ijkplayer-armv7a:assemble
+          ./gradlew :ijkplayer-arm64:assemble
+          ./gradlew :ijkplayer-java:assemble
+          
       - name: Upload Node Directory
         uses: actions/upload-artifact@v4
         with:
-          name: ffmpeg-6.1.1
-          path: ${{ env.ROOT }}/android/contrib
-          
+          name: ijk
+          path: /Users/runner/work/iot-ijkplayer
