@@ -14,15 +14,14 @@ jobs:
         
       - name: Download r27c NDK
         run: |
-          cd ${{ env.ROOT }}
           wget https://dl.google.com/android/repository/android-ndk-r27c-linux.zip
           unzip android-ndk-r27c-linux.zip
           rm android-ndk-r27c-linux.zip
 
       - name: Build ffmpeg
         run: |
-          ANDROID_NDK=${{ env.ROOT }}/android-ndk-r27c
-          ANDROID_NDK_ROOT=${{ env.ROOT }}/android-ndk-r27c
+          ANDROID_NDK=${{ env.ROOT }}/ijkplayer-android/android-ndk-r27c
+          ANDROID_NDK_ROOT=${{ env.ROOT }}/ijkplayer-android/android-ndk-r27c
           HOST_PLATFORM="linux-x86_64"
           ANDROID_ABI=21
 
