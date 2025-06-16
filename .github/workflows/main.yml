@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
         with:
@@ -13,8 +13,8 @@ jobs:
 
       - name: Download r27 NDK
         run: |
-          wget https://dl.google.com/android/repository/android-ndk-r27-linux.zip
-          unzip android-ndk-r27-linux.zip
+          wget https://dl.google.com/android/repository/android-ndk-r27-darwin.zip
+          unzip android-ndk-r27-darwin.zip
       
       - uses: actions/setup-java@v4
         with:
@@ -22,27 +22,12 @@ jobs:
             java-version: '11'
       - name: Build with Gradle
         run: |
-          ls -l /home/runner/work/ijkplayer-android/ijkplayer-android/android-ndk-r27
-          perl -i -pe "s#.*HOST_ARCH=x86_64.*#\t\tx86_64|amd64|arm64) HOST_ARCH=x86_64;;#g" /home/runner/work/ijkplayer-android/ijkplayer-android/android-ndk-r27/ndk-build
-          export ANDROID_NDK=/home/runner/work/ijkplayer-android/ijkplayer-android/android-ndk-r27
-          export ANDROID_NDK_ROOT=/home/runner/work/ijkplayer-android/ijkplayer-android/android-ndk-r27
+          ls -l /Users/runner/work/ijkplayer-android/ijkplayer-android/android-ndk-r27
+          perl -i -pe "s#.*HOST_ARCH=x86_64.*#\t\tx86_64|amd64|arm64) HOST_ARCH=x86_64;;#g" /Users/runner/work/ijkplayer-android/ijkplayer-android/android-ndk-r27/ndk-build
+          export ANDROID_NDK=/Users/runner/work/ijkplayer-android/ijkplayer-android/android-ndk-r27
+          export ANDROID_NDK_ROOT=/Users/runner/work/ijkplayer-android/ijkplayer-android/android-ndk-r27
           
-          ./init-android-openssl.sh
-          ./init-android.sh
-
-          cd android/contrib
-          ./compile-openssl.sh arm64
-          ./compile-ffmpeg.sh clean
-          ./compile-ffmpeg.sh arm64
-          cd ..
-          ./compile-ijk.sh arm64
-
-          cd contrib
-          ./compile-openssl.sh armv7a
-          ./compile-ffmpeg.sh clean
-          ./compile-ffmpeg.sh armv7a
-          cd ..
-          ./compile-ijk.sh armv7a
+          sh .github/c.sh
           
           cd android/ijkplayer
           ./gradlew :ijkplayer-armv7a:assemble
@@ -53,4 +38,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ijk
-          path: /home/runner/work/iot-ijkplayer
+          path: /Users/runner/work/iot-ijkplayer
