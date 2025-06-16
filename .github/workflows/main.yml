@@ -38,4 +38,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ijk
-          path: /Users/runner/work/iot-ijkplayer
+          path: /Users/runner/work/ijkplayer-android
