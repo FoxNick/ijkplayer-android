@@ -15,15 +15,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
+CURRENT_DIR=$(dirname "$(readlink -f "$0")")
 # IJK_FFMPEG_UPSTREAM=git://git.videolan.org/ffmpeg.git
 IJK_FFMPEG_UPSTREAM=https://github.com/liangzemian/ff6.1.1.git
 IJK_FFMPEG_FORK=https://github.com/liangzemian/ff6.1.1.git
 IJK_FFMPEG_COMMIT=ff6.1.1--ijk0.8.8
-IJK_FFMPEG_LOCAL_REPO=extra/ffmpeg
+IJK_FFMPEG_LOCAL_REPO=$CURRENT_DIR/extra/ffmpeg
 
 set -e
-TOOLS=tools
+TOOLS=$CURRENT_DIR/tools
 
 git --version
 
