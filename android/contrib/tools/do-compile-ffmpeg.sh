@@ -38,8 +38,8 @@ if [ -z "$FF_ARCH" ]; then
 fi
 
 CURRENT_DIR=$(dirname "$(readlink -f "$0")")
-FF_BUILD_ROOT=`pwd`
-FF_ANDROID_PLATFORM=android-21
+FF_BUILD_ROOT=$(dirname "$CURRENT_DIR")Add comment更多操作
+FF_ANDROID_PLATFORM=21
 
 FF_BUILD_NAME=
 FF_SOURCE=
